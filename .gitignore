@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Environment and secrets
+.env
+.env.*
+
+# Data, models, and experiment artifacts
+data/raw/
+models/
+checkpoints/
+runs/
+mlruns/
+wandb/
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
