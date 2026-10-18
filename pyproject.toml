@@ -60,5 +60,5 @@ strict = true
 packages = ["automl_dl"]
 
 [[tool.mypy.overrides]]
-module = ["ccxt", "ccxt.*"]
+module = ["ccxt", "ccxt.*", "sklearn", "sklearn.*"]
 ignore_missing_imports = true

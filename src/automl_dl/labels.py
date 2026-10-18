@@ -8,6 +8,17 @@ LABEL_FLAT = 0
 LABEL_LONG = 1
 
 
+def forward_return_targets(frame: pd.DataFrame, horizons: tuple[int, ...]) -> pd.DataFrame:
+    """Compute future log returns without filling unavailable tail observations."""
+    if not horizons or any(horizon <= 0 for horizon in horizons):
+        raise ValueError("horizons must contain positive integers")
+    close = frame["close"].astype(float)
+    return pd.DataFrame(
+        {f"return_h{horizon}": np.log(close.shift(-horizon) / close) for horizon in horizons},
+        index=frame.index,
+    )
+
+
 def triple_barrier_labels(
     frame: pd.DataFrame,
     *,

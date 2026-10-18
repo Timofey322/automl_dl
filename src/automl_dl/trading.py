@@ -150,3 +150,40 @@ def backtest_signals(
 
     equity_values = equity_values.ffill().fillna(initial_equity)
     return pd.DataFrame(trades), equity_values
+
+
+def trading_metrics(
+    trades: pd.DataFrame,
+    equity: pd.Series,
+    *,
+    periods_per_year: int,
+) -> dict[str, float]:
+    returns = equity.pct_change().fillna(0.0)
+    volatility = float(returns.std())
+    sharpe = 0.0
+    if volatility > 0.0:
+        sharpe = float(returns.mean() / volatility * np.sqrt(periods_per_year))
+
+    running_max = equity.cummax()
+    drawdown = equity / running_max - 1.0
+    if trades.empty:
+        return {
+            "trade_count": 0.0,
+            "total_return": float(equity.iloc[-1] / equity.iloc[0] - 1.0),
+            "sharpe": sharpe,
+            "max_drawdown": float(drawdown.min()),
+            "win_rate": 0.0,
+            "profit_factor": 0.0,
+        }
+
+    trade_returns = trades["net_return"].astype(float)
+    gains = float(trade_returns[trade_returns > 0.0].sum())
+    losses = abs(float(trade_returns[trade_returns < 0.0].sum()))
+    return {
+        "trade_count": float(len(trades)),
+        "total_return": float(equity.iloc[-1] / equity.iloc[0] - 1.0),
+        "sharpe": sharpe,
+        "max_drawdown": float(drawdown.min()),
+        "win_rate": float((trade_returns > 0.0).mean()),
+        "profit_factor": gains / losses if losses > 0.0 else 0.0,
+    }

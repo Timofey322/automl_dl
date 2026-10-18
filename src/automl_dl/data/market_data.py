@@ -92,7 +92,9 @@ class BinanceOHLCVStore:
 
     def path_for(self, symbol: str, timeframe: str) -> Path:
         safe_symbol = symbol.replace("/", "-")
-        return self.root / "raw" / safe_symbol / f"{timeframe}.parquet"
+        # Windows paths are case-insensitive, so 1m and 1M need distinct slugs.
+        timeframe_slug = "1mo" if timeframe == "1M" else timeframe
+        return self.root / "raw" / safe_symbol / f"{timeframe_slug}.parquet"
 
     def load(self, symbol: str, timeframe: str = "1m") -> pd.DataFrame:
         path = self.path_for(symbol, timeframe)

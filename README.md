@@ -45,9 +45,11 @@ uv sync --extra dev
 uv run automl-dl download --symbol BTC/USDT --since 2025-01-01
 uv run automl-dl resample --symbol BTC/USDT
 uv run automl-dl prepare --symbol BTC/USDT --timeframe 1h --horizon 24
+uv run automl-dl baseline --symbol BTC/USDT --decision-timeframe 15m --horizon 16
 ```
 
-Данные сохраняются локально в Parquet и не добавляются в Git.
+Данные сохраняются локально в Parquet и не добавляются в Git. Результаты
+walk-forward экспериментов сохраняются в `artifacts/baseline/`.
 
 ## Проверка
 

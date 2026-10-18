@@ -24,6 +24,7 @@ checkpoints/
 runs/
 mlruns/
 wandb/
+artifacts/
 
 # IDE and OS files
 .idea/

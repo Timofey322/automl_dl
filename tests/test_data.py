@@ -1,8 +1,17 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 
-from automl_dl.data.market_data import resample_ohlcv
+from automl_dl.data.market_data import BinanceOHLCVStore, resample_ohlcv
+
+
+def test_monthly_and_minute_paths_are_distinct_on_windows(tmp_path: Path) -> None:
+    store = BinanceOHLCVStore(tmp_path)
+
+    assert store.path_for("BTC/USDT", "1m").name == "1m.parquet"
+    assert store.path_for("BTC/USDT", "1M").name == "1mo.parquet"
 
 
 def test_resample_keeps_only_complete_candles() -> None:
