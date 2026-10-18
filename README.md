@@ -14,9 +14,45 @@
 
 ## Поддерживаемые тикеры
 
-Система работает с тикерами:
+Источником данных служит Binance через CCXT. Система работает с торговыми парами:
 
-- **BTC-USD** — Bitcoin;
-- **ETH-USD** — Ethereum;
-- **BNB-USD** — BNB;
-- **SOL-USD** — Solana.
+- **BTC/USDT** — Bitcoin;
+- **ETH/USDT** — Ethereum;
+- **BNB/USDT** — BNB;
+- **SOL/USDT** — Solana.
+
+## Архитектура
+
+Система строится как исследовательский конвейер:
+
+1. Инкрементальная загрузка закрытых минутных свечей OHLCV.
+2. Построение таймфреймов `5m`, `15m`, `1h`, `4h`, `1d`, `1w`, `1M`.
+3. Расчёт причинных признаков и разметки triple barrier.
+4. Мультитаймфреймный Patch Transformer с отдельным энкодером каждого масштаба.
+5. Прогноз направления, квантилей доходности, волатильности и ценовых экстремумов.
+6. Risk Engine, формирующий `LONG`, `SHORT` или `NO TRADE`, а также `TP` и `SL`.
+7. Walk-forward валидация и бэктест с комиссиями и проскальзыванием.
+
+Pretrained-модели Kronos, Chronos-2 и Granite TTM планируется сравнивать с основной
+обучаемой архитектурой на одинаковых временных разбиениях.
+
+## Быстрый старт
+
+Требуются Python 3.11 и [uv](https://docs.astral.sh/uv/).
+
+```powershell
+uv sync --extra dev
+uv run automl-dl download --symbol BTC/USDT --since 2025-01-01
+uv run automl-dl resample --symbol BTC/USDT
+uv run automl-dl prepare --symbol BTC/USDT --timeframe 1h --horizon 24
+```
+
+Данные сохраняются локально в Parquet и не добавляются в Git.
+
+## Проверка
+
+```powershell
+uv run ruff check .
+uv run mypy
+uv run pytest
+```

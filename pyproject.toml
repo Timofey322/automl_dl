@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "automl-dl"
+version = "0.1.0"
+description = "Multi-timeframe AutoML research platform for cryptocurrency forecasting"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "ccxt>=4.4",
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "pydantic>=2.9",
+    "pyyaml>=6.0",
+    "scikit-learn>=1.5",
+    "torch>=2.5",
+    "typer>=0.12",
+]
+
+[project.optional-dependencies]
+experiment = [
+    "mlflow>=2.17",
+    "optuna>=4.0",
+]
+foundation = [
+    "chronos-forecasting>=2.0",
+    "transformers>=4.57",
+]
+dev = [
+    "mypy>=1.13",
+    "pandas-stubs>=2.2",
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+]
+
+[project.scripts]
+automl-dl = "automl_dl.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/automl_dl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["automl_dl"]
+
+[[tool.mypy.overrides]]
+module = ["ccxt", "ccxt.*"]
+ignore_missing_imports = true
