@@ -51,6 +51,18 @@ uv run automl-dl baseline --symbol BTC/USDT --decision-timeframe 15m --horizon 1
 Данные сохраняются локально в Parquet и не добавляются в Git. Результаты
 walk-forward экспериментов сохраняются в `artifacts/baseline/`.
 
+## Чекпойнт 2: EDA
+
+Разведочный анализ минутных данных находится в
+[`notebooks/checkpoint_2_eda.ipynb`](notebooks/checkpoint_2_eda.ipynb).
+Notebook содержит графики цен и доходностей, ADF/KPSS-тесты, ACF,
+корреляционные heatmap, lead–lag анализ и выводы для моделирования.
+
+```powershell
+uv sync --extra dev --extra eda
+uv run jupyter nbconvert --to notebook --execute --inplace notebooks/checkpoint_2_eda.ipynb
+```
+
 ## Проверка
 
 ```powershell
