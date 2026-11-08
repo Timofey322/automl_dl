@@ -43,6 +43,7 @@ Pretrained-модели Kronos, Chronos-2 и Granite TTM планируется 
 ```powershell
 uv sync --extra dev
 uv run automl-dl download --symbol BTC/USDT --since 2025-01-01
+uv run automl-dl backfill-all --since 2021-01-01
 uv run automl-dl resample --symbol BTC/USDT
 uv run automl-dl prepare --symbol BTC/USDT --timeframe 1h --horizon 24
 uv run automl-dl baseline --symbol BTC/USDT --decision-timeframe 15m --horizon 16
@@ -53,14 +54,20 @@ walk-forward экспериментов сохраняются в `artifacts/bas
 
 ## Чекпойнт 2: EDA
 
-Разведочный анализ минутных данных находится в
-[`notebooks/checkpoint_2_eda.ipynb`](notebooks/checkpoint_2_eda.ipynb).
-Notebook содержит графики цен и доходностей, ADF/KPSS-тесты, ACF,
-корреляционные heatmap, lead–lag анализ и выводы для моделирования.
+Файл чекпойнта: [`notebooks/EDA.ipynb`](notebooks/EDA.ipynb).
+
+Он включает:
+- статистики, пропуски, ошибочные значения и выбросы;
+- баланс классов triple-barrier и связи признаков с таргетом;
+- корреляции, `pairplot`, сводные таблицы;
+- стационарность ADF/KPSS и ACF;
+- простой HGB-baseline с permutation importance;
+- расширенный causal feature store (>1000 признаков) и исследование важности;
+- разбор аугментаций и практическую применимость задачи.
 
 ```powershell
 uv sync --extra dev --extra eda
-uv run jupyter nbconvert --to notebook --execute --inplace notebooks/checkpoint_2_eda.ipynb
+uv run jupyter nbconvert --to notebook --execute --inplace notebooks/EDA.ipynb
 ```
 
 ## Проверка
